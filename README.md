@@ -92,7 +92,7 @@ which tleap
 1) **Create structure (peptide + C8 fatty acid)**
    - Save peptide+lipid as `peptide/lipopep.pdb`.
    - Save the fatty acid alone (with extra –OH as carboxylic acid) as `lipo/LIG.cif`.
-# Note: de novo peptide modeling (Rosetta/AlphaFold/other) is outside the scope of this tutorial.
+   # Note: de novo peptide modeling (Rosetta/AlphaFold/other) is outside the scope of this tutorial.
 
 2) **Parametrize the fatty acid** (uses `$AMBERHOME`)
 ```bash
