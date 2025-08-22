@@ -24,6 +24,7 @@ A practical, runnable protocol to simulate an **N-acylated peptide (lipopeptide)
 - Detailed commands & input templates
 - Analysis notes
 - References
+- Author
 
 ---
 
@@ -45,76 +46,94 @@ We will: (1) parameterize the fatty-acid cap as a small molecule (GAFF/AM1-BCC),
 
 Set `AMBERHOME` and add AmberTools to `PATH`:
 
-Linux/macOS (bash/zsh)
+```bash
+# Linux/macOS (bash/zsh)
 export AMBERHOME="/home/cluster/amber22"
 export PATH="$AMBERHOME/bin:$PATH"
 
-(If your install lives elsewhere, change the path accordingly. Verify with `which antechamber` and `which tleap`.)
+# Verify:
+which antechamber
+which tleap
+```
+(If your install lives elsewhere, change the path accordingly.)
 
 ---
 
 ## Repo structure
 
+```text
 .
-├─ lipo/                   # fatty acid (lipid cap) parametrization
-│  ├─ LIG.cif              # standalone fatty acid as -COOH (temporary OH)
-│  ├─ lig.ac               # antechamber output
-│  ├─ lig.prepin           # prepgen output
-│  ├─ frcmod.lig           # parmchk2 output
-├─ peptide/
-│  └─ lipopep.pdb          # peptide + C8 fatty acid (N-acyl) starting coords
-├─ membrane/
-│  └─ system.pdb           # membrane + peptide, cleaned/merged (TLEaP INPUT)
-├─ tleap/
-│  ├─ lipopep_membrane.in  # run from repo root:  tleap -f tleap/lipopep_membrane.in
-│  └─ leap.log
-├─ mdin/
-│  ├─ min1.mdin            # STEP 1: restrained minimization
-│  ├─ min2.mdin            # STEP 2: unrestrained minimization
-│  ├─ term.mdin            # STEP 3: thermalization / heating (NVT)
-│  ├─ eq.mdin              # STEP 4: equilibration (NPT)
-│  └─ md.in                # STEP 5: production (NPT)
-└─ README.md
+├── lipo/                   # fatty acid (lipid cap) parametrization
+│   ├── LIG.cif             # standalone fatty acid as -COOH (temporary OH)
+│   ├── lig.ac              # antechamber output
+│   ├── lig.prepin          # prepgen output
+│   └── frcmod.lig          # parmchk2 output
+├── peptide/
+│   └── lipopep.pdb         # peptide + C8 fatty acid (N-acyl) starting coords
+├── membrane/
+│   └── system.pdb          # membrane + peptide, cleaned/merged (TLEaP INPUT)
+├── tleap/
+│   ├── lipopep_membrane.in # run from repo root:  tleap -f tleap/lipopep_membrane.in
+│   └── leap.log
+├── mdin/
+│   ├── min1.mdin           # STEP 1: restrained minimization
+│   ├── min2.mdin           # STEP 2: unrestrained minimization
+│   ├── term.mdin           # STEP 3: thermalization / heating (NVT)
+│   ├── eq.mdin             # STEP 4: equilibration (NPT)
+│   └── md.in               # STEP 5: production (NPT)
+├── pre-post-md.jpeg
+└── README.md
+```
 
 ---
 
 ## Commands cheat sheet (exact steps)
 
-# 1) Create structure (peptide + C8 fatty acid)
-# Save peptide+lipid as:  peptide/lipopep.pdb
-# Save the fatty acid alone (with extra -OH as carboxylic acid) as:  lipo/LIG.cif
+1) **Create structure (peptide + C8 fatty acid)**
+   - Save peptide+lipid as `peptide/lipopep.pdb`.
+   - Save the fatty acid alone (with extra –OH as carboxylic acid) as `lipo/LIG.cif`.
 
-# 2) Parametrization of the fatty acid (uses AMBERHOME)
-$ antechamber -fi ccif -i lipo/LIG.cif -bk LIG -fo ac -o lipo/lig.ac -c bcc -at amber
-$ prepgen     -i lipo/lig.ac -o lipo/lig.prepin -m lipo/lig.mc -rn LIG
-$ parmchk2    -i lipo/lig.prepin -f prepi -o lipo/frcmod.lig -a Y -p $AMBERHOME/dat/leap/parm/parm10.dat
+2) **Parametrize the fatty acid** (uses `$AMBERHOME`)
+```bash
+antechamber -fi ccif -i lipo/LIG.cif -bk LIG -fo ac -o lipo/lig.ac -c bcc -at amber
+prepgen     -i lipo/lig.ac -o lipo/lig.prepin -m lipo/lig.mc -rn LIG
+parmchk2    -i lipo/lig.prepin -f prepi -o lipo/frcmod.lig -a Y -p "$AMBERHOME/dat/leap/parm/parm10.dat"
+```
 
-# 3) PACKMOL-MEMGEN: generate a membrane–peptide complex
-$ packmol-memgen --lipids POPE:POPG --ratio 3:1 --solute peptide/lipopep.pdb --solute_con 1 --parametrize --distxy_fix 50
-# --distxy_fix sets the XY side length (Å) of the membrane patch; adjust to your target size.
+3) **PACKMOL-Memgen: build membrane–peptide complex**
+```bash
+packmol-memgen --lipids POPE:POPG --ratio 3:1 --solute peptide/lipopep.pdb --solute_con 1 --parametrize --distxy_fix 50
+# --distxy_fix sets the XY side length in Å (e.g., 50 Å per side for a ~50×50 Å patch).
+```
 
-# 3b) Manual clean & reposition (ensure TLEaP-friendly input)
-# - Open the PACKMOL PDB as text and remove all waters/ions (keep only lipids + peptide).
-# - Open in DS Visualizer / Chimera / PyMOL, reposition the peptide, and re-save.
-# - Because some viewers reorder membrane atoms, copy ONLY the peptide ATOM/HETATM
-#   records from the viewer-saved file and paste them into the *original* membrane PDB.
-# - Save the merged file as:  membrane/system.pdb  (TLEaP input).
+4) **Manual clean & reposition (TLEaP-friendly input)**
+   - Remove all waters/ions from the PACKMOL PDB (keep only lipids + peptide).
+   - Reposition the peptide in DS Visualizer / Chimera / PyMOL and save.
+   - Because viewers may reorder membrane atoms, copy **only** the peptide ATOM/HETATM
+     records from the viewer-saved file back into the original membrane PDB.
+   - Save as `membrane/system.pdb` (TLEaP input).
 
-# 4) TLEaP (short one-liner; run from repo root)
-$ tleap -f tleap/lipopep_membrane.in
+5) **TLEaP (one-liner; run from repo root)**
+```bash
+tleap -f tleap/lipopep_membrane.in
 # Outputs: system.prmtop, system.rst7, system_solv.pdb, tleap/leap.log
+```
 
-# 5) Minimization, heating, equilibration (CPU with sander; change paths if needed)
-$ sander -i mdin/min1.mdin -p system.prmtop -c system.rst7      -r systemmin1.rst7 -o systemmin1.mdout -ref system.rst7
-$ sander -i mdin/min2.mdin -p system.prmtop -c systemmin1.rst7  -r systemmin2.rst7 -o systemmin2.mdout
-$ sander -i mdin/term.mdin -p system.prmtop -c systemmin2.rst7  -r systemterm.rst7 -o systemterm.mdout -x systemterm.nc
-$ sander -i mdin/eq.mdin   -p system.prmtop -c systemterm.rst7  -r systemeq.rst7   -o systemeq.mdout   -x systemeq.nc
+6) **Minimization, heating, equilibration (CPU with sander)**
+```bash
+sander -i mdin/min1.mdin -p system.prmtop -c system.rst7     -r systemmin1.rst7 -o systemmin1.mdout -ref system.rst7
+sander -i mdin/min2.mdin -p system.prmtop -c systemmin1.rst7 -r systemmin2.rst7 -o systemmin2.mdout
+sander -i mdin/term.mdin -p system.prmtop -c systemmin2.rst7 -r systemterm.rst7 -o systemterm.mdout -x systemterm.nc
+sander -i mdin/eq.mdin   -p system.prmtop -c systemterm.rst7 -r systemeq.rst7   -o systemeq.mdout   -x systemeq.nc
+```
 
-# 6) Production (example: long run, multiple segments)
-# Either your script:
-$ sh run.xxx
-# ...or direct:
-# $ pmemd.cuda -O -i mdin/md.in -o md.out -p system.prmtop -c systemeq.rst7 -r md.rst -x md.nc
+7) **Production**
+```bash
+# either your script:
+sh run.xxx
+# or direct with GPU:
+pmemd.cuda -O -i mdin/md.in -o md.out -p system.prmtop -c systemeq.rst7 -r md.rst -x md.nc
+```
 
 ---
 
@@ -133,6 +152,13 @@ $ sh run.xxx
 4) **System assembly & re-solvation in TLEaP (`tleap/`)**  
    Load **Lipid21** (membrane), **ff14SB** (peptide), **TIP3P** (water), and your **ligand params** (`lipo/lig.prepin`, `lipo/frcmod.lig`). Re-solvate with `solvatebox` (TIP3P) and add ions for neutrality and/or **~150 mM**. This yields `system.prmtop`, `system.rst7`, `system_solv.pdb`.
 
+**150 mM quick recipe (AMBER-style):**
+- From `tleap/leap.log` get the box volume in Å³ → convert to liters: `V_L = V_ang3 × 1e-27`  
+- Moles at 150 mM: `n_pairs = 0.150 × V_L`  
+- Ion pairs: `N_pairs = n_pairs × 6.022e23` → round to nearest integer  
+- Add equal Na⁺ and Cl⁻ **after neutrality**, e.g.:  
+  `addIons prot Na+ 19 Cl- 19`
+
 5) **MD sequence (`mdin/`)**  
    - **`min1.mdin`** — restrained minimization (relieve clashes; restrain solute heavy atoms).  
    - **`min2.mdin`** — unrestrained minimization.  
@@ -145,42 +171,32 @@ $ sh run.xxx
 ## Detailed commands & input templates
 
 ### Ligand (fatty-acid cap) parametrization
-
+```bash
 antechamber -fi ccif -i lipo/LIG.cif -bk LIG -fo ac   -o lipo/lig.ac   -c bcc -at amber
 prepgen     -i lipo/lig.ac -o lipo/lig.prepin -m lipo/lig.mc   -rn LIG
 parmchk2    -i lipo/lig.prepin -f prepi    -o lipo/frcmod.lig -a Y \
-            -p $AMBERHOME/dat/leap/parm/parm10.dat
-
-Note:
-- `lipo/LIG.cif` is the standalone fatty acid in –COOH form (temporary O/H only for parametrization).
+            -p "$AMBERHOME/dat/leap/parm/parm10.dat"
+```
+Note: `lipo/LIG.cif` is the standalone fatty acid in **–COOH** form (temporary O/H only for parametrization).
 
 ### TLEaP (short version using an .in file)
-
 Run from the **repo root** (so relative paths work):
-
+```bash
 tleap -f tleap/lipopep_membrane.in
-
+```
 This generates:
-- system.prmtop
-- system.rst7
-- system_solv.pdb
-- tleap/leap.log
+```text
+system.prmtop
+system.rst7
+system_solv.pdb
+tleap/leap.log
+```
 
 **Why remove PACKMOL water and re-solvate with TLEaP?**  
 PACKMOL outputs may include water/ions for packing, but we **strip them** and keep **only membrane + peptide** in `membrane/system.pdb`. Then we solvate with `solvatebox` in TLEaP because:
 - TLEaP uses **pre-equilibrated TIP3P** and trims overlaps cleanly around membranes.  
 - Hydration is **uniform and reproducible**.  
 - Ion addition and target molarity are **controlled** after TLEaP solvation.
-
-**Setting ~150 mM NaCl (brief recipe).**  
-Use the **box volume** printed in `tleap/leap.log`:
-1) Convert volume from Å³ to liters: `V_L = V_ang3 × 1e-27`  
-2) Moles at 150 mM: `n_pairs = 0.150 × V_L`  
-3) Ion pairs: `N_pairs = n_pairs × 6.022e23` → round to nearest integer  
-4) Add equal Na⁺ and Cl⁻ **after neutrality**, e.g.:  
-   addIons prot Na+ 19 Cl- 19
-
-(If your box size changes, recompute and update the counts.)
 
 ---
 
@@ -199,3 +215,14 @@ Use the **box volume** printed in `tleap/leap.log`:
 - AMBER ligand (Antechamber/parmchk2) workflows
 - Lipid21 (AMBER lipid force field) and usage notes
 - Salt concentration calculation from `leap.log` volume (classic AMBER recipe)
+
+---
+
+## 👤 Author
+
+**Ivan Sanchis, PhD**  
+Laboratorio de Péptidos Bioactivos  
+Facultad de Bioquímica y Ciencias Biológicas  
+Universidad Nacional del Litoral  
+Santa Fe, Argentina  
+📧 sanchisivan@gmail.com / sanchisivan@fbcb.unl.edu.ar
