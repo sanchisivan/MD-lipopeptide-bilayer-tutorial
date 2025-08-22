@@ -7,7 +7,7 @@ A practical, runnable protocol to simulate an **N-acylated peptide (lipopeptide)
 **Expected behavior.** In reference runs, the lipopeptide **anchors at the headgroup region via the fatty-acid tail** and the **helical segment inserts into the bilayer** during equilibration and production. These templates are reusable for analogous lipopeptides (e.g., C8–C10 N-acyl chains) with minimal edits to `lipo/LIG.cif` and residue indices in TLEaP.
 
 <p align="center">
-  <img src="pre-post-md.jpg" alt="Pre- vs post-MD lipopeptide–membrane snapshot" width="820">
+  <img src="pre-post-md.jpeg" alt="Pre- vs post-MD lipopeptide–membrane snapshot" width="820">
   <br>
   <em>Pre (left): fatty-acid tail anchors at the headgroup region. Post MD (right): the helical segment inserts into the bilayer.</em>
 </p>
