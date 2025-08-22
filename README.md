@@ -92,6 +92,7 @@ which tleap
 1) **Create structure (peptide + C8 fatty acid)**
    - Save peptide+lipid as `peptide/lipopep.pdb`.
    - Save the fatty acid alone (with extra –OH as carboxylic acid) as `lipo/LIG.cif`.
+# Note: de novo peptide modeling (Rosetta/AlphaFold/other) is outside the scope of this tutorial.
 
 2) **Parametrize the fatty acid** (uses `$AMBERHOME`)
 ```bash
@@ -143,7 +144,8 @@ pmemd.cuda -O -i mdin/md.in -o md.out -p system.prmtop -c systemeq.rst7 -r md.rs
    The fatty acid is not covered by protein/lipid FFs, so we parametrize it as a small molecule with **GAFF/GAFF2** and **AM1-BCC** charges (Antechamber/parmchk2). Build it temporarily as **–COOH** to get stable atom types/charges; the extra O/H are removed when forming the amide.
 
 2) **Peptide build & N-acyl bond (`peptide/`)**  
-   Create `peptide/lipopep.pdb` with the peptide and C8 fatty acid linked via an **amide** (fatty-acid carbonyl C to peptide **N-terminal N**).
+   De novo modeling of the peptide can be obtained with **Rosetta**, **AlphaFold**, or other tools and is **not part of this tutorial**.  
+   Create `peptide/lipopep.pdb` with your peptide model and a **C8 fatty acid** linked via an **amide** (fatty-acid carbonyl **C** to peptide **N-terminal N**).
 
 3) **Membrane packing + clean/reposition (`membrane/`)**  
    PACKMOL-Memgen builds a POPE:POPG (3:1) patch and places the lipopeptide.  
