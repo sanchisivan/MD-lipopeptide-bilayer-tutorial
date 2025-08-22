@@ -1,0 +1,62 @@
+# tleap/lipopep_membrane.in
+# NOTE: Run from repo root:  tleap -f tleap/lipopep_membrane.in
+# Assumes the working directory is the repo root.
+
+logFile tleap/leap.log
+
+# ----------------------------------------------------------------------
+# Force fields
+# ----------------------------------------------------------------------
+source leaprc.protein.ff14SB
+source leaprc.lipid21
+source leaprc.water.tip3p
+
+# ----------------------------------------------------------------------
+# Ligand (fatty-acid cap) parameters
+# ----------------------------------------------------------------------
+loadamberprep ligand/lig.prepin
+loadamberparams ligand/frcmod.lig
+
+# ----------------------------------------------------------------------
+# Coordinates: membrane + peptide ONLY
+# IMPORTANT: The PACKMOL-Memgen output should be cleaned so that
+# membrane/prot.pdb contains *no* waters or ions (just lipids + peptide).
+# We deliberately remove PACKMOL waters/ions and re-solvate with TLEaP
+# because TLEaP uses pre-equilibrated TIP3P, trims overlaps neatly, and
+# gives more uniform hydration and controlled ion placement.
+# ----------------------------------------------------------------------
+prot = loadpdb membrane/prot.pdb
+
+# ----------------------------------------------------------------------
+# OPTIONAL: Create the covalent N-acyl amide here if not prebuilt.
+# Replace <resid_LIG> and <resid_PEP_Nterm> with actual residue indices.
+# Example (commented):
+# bond prot.<resid_LIG>.C prot.<resid_PEP_Nterm>.N
+# ----------------------------------------------------------------------
+
+# ----------------------------------------------------------------------
+# Solvate primarily along Z (add water above/below the bilayer)
+# Adjust padding if you need a thicker water layer.
+# ----------------------------------------------------------------------
+solvatebox prot TIP3PBOX {0 0 20}
+
+# ----------------------------------------------------------------------
+# Ions
+# 1) Neutralize if needed (uncomment one of the following lines and use
+#    the appropriate counterion to bring the net charge to 0):
+#    addIons prot Cl- 1
+#
+# 2) Add *equal* Na+ and Cl- for ~150 mM NaCl (counts depend on box size).
+#    Example for 19 ion pairs (from leap.log volume calculation):
+# ----------------------------------------------------------------------
+# Inspect charge for your records:
+charge prot
+# Add ~150 mM as equal pairs (edit numbers if your volume differs):
+addIons prot Na+ 19 Cl- 19
+
+# ----------------------------------------------------------------------
+# Outputs
+# ----------------------------------------------------------------------
+saveAmberParm prot system.prmtop system.rst7
+savepdb prot system_solv.pdb
+quit

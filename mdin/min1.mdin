@@ -1,0 +1,12 @@
+﻿
+&cntrl
+	imin=1,
+	maxcyc=1000,
+	ncyc=100,
+	ntb=1,
+	ntxo=1,
+	ntr=1,
+	cut=10.0,
+	restraintmask=':1-11225',
+	restraint_wt=500.0,
+&end

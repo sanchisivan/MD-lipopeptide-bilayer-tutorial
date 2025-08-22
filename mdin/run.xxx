@@ -1,0 +1,12 @@
+${AMBERHOME}/bin/pmemd.cuda -O -i md.in -o system1.out \
+-p system.prmtop -c systemeq.rst7 -r systemmd1.rst7 -x systemmd1.nc -inf mdinfo1
+${AMBERHOME}/bin/pmemd.cuda -O -i md.in -o system2.out \
+-p system.prmtop -c systemmd1.rst7 -r systemmd2.rst7 -x systemmd2.nc -inf mdinfo2
+${AMBERHOME}/bin/pmemd.cuda -O -i md.in -o systemmd3.out \
+-p system.prmtop -c systemmd2.rst7 -r systemmd3.rst7 -x systemmd3.nc -inf mdinfo3
+${AMBERHOME}/bin/pmemd.cuda -O -i md.in -o systemmd4.out \
+-p system.prmtop -c systemmd3.rst7 -r systemmd4.rst7 -x systemmd4.nc -inf mdinfo4
+${AMBERHOME}/bin/pmemd.cuda -O -i md.in -o systemmd5.out \
+-p system.prmtop -c systemmd4.rst7 -r systemmd5.rst7 -x systemmd5.nc -inf mdinfo5
+
+

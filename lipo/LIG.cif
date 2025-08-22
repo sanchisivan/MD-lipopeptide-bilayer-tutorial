@@ -1,0 +1,90 @@
+data_LIG
+#
+#
+_chem_comp.id                  LIG
+_chem_comp.type                NON-POLYMER
+_chem_comp.pdbx_formal_charge  0
+##
+loop_
+_chem_comp_atom.comp_id
+_chem_comp_atom.atom_id
+_chem_comp_atom.alt_atom_id
+_chem_comp_atom.type_symbol
+_chem_comp_atom.charge
+_chem_comp_atom.partial_charge
+_chem_comp_atom.model_Cartn_x
+_chem_comp_atom.model_Cartn_y
+_chem_comp_atom.model_Cartn_z
+_chem_comp_atom.pdbx_model_Cartn_x_ideal
+_chem_comp_atom.pdbx_model_Cartn_y_ideal
+_chem_comp_atom.pdbx_model_Cartn_z_ideal
+LIG  C1   c   C  0    0.6221  -16.146  4.898   0.080  -16.146  4.898   0.080  
+LIG  C2   c3  C  0   -0.1724  -14.791  5.607   0.092  -14.791  5.607   0.092  
+LIG  C3   c3  C  0   -0.0744  -13.586  4.630   0.035  -13.586  4.630   0.035  
+LIG  C4   c3  C  0   -0.0794  -12.232  5.379   0.047  -12.232  5.379   0.047  
+LIG  C5   c3  C  0   -0.0794  -11.030  4.406   0.000  -11.030  4.406   0.000  
+LIG  C6   c3  C  0   -0.0784   -9.676  5.154   0.011   -9.676  5.154   0.011  
+LIG  C7   c3  C  0   -0.0794   -8.475  4.179  -0.015   -8.475  4.179  -0.015  
+LIG  C8   c3  C  0   -0.0794   -7.119  4.926  -0.006   -7.119  4.926  -0.006  
+LIG  C9   c3  C  0   -0.0804   -5.919  3.950  -0.015   -5.919  3.950  -0.015  
+LIG  C10  c3  C  0   -0.0931   -4.567  4.694  -0.011   -4.567  4.694  -0.011  
+LIG  H1   hc  H  0  0.033033   -3.735  3.979  -0.014   -3.735  3.979  -0.014  
+LIG  H2   hc  H  0  0.033033   -4.471  5.325   0.882   -4.471  5.325   0.882  
+LIG  H3   hc  H  0  0.033033   -4.470  5.334  -0.897   -4.470  5.334  -0.897  
+LIG  H4   hc  H  0    0.0387   -5.972  3.293   0.863   -5.972  3.293   0.863  
+LIG  H5   hc  H  0    0.0387   -5.974  3.306  -0.902   -5.974  3.306  -0.902  
+LIG  H6   hc  H  0    0.0397   -7.060  5.586  -0.882   -7.060  5.586  -0.882  
+LIG  H7   hc  H  0    0.0397   -7.061  5.568   0.883   -7.061  5.568   0.883  
+LIG  H8   hc  H  0    0.0407   -8.528  3.511   0.855   -8.528  3.511   0.855  
+LIG  H9   hc  H  0    0.0407   -8.537  3.547  -0.910   -8.537  3.547  -0.910  
+LIG  H10  hc  H  0    0.0397   -9.622  5.824  -0.858   -9.622  5.824  -0.858  
+LIG  H11  hc  H  0    0.0397   -9.614  5.785   0.907   -9.614  5.785   0.907  
+LIG  H12  hc  H  0    0.0437  -11.078  3.725   0.861  -11.078  3.725   0.861  
+LIG  H13  hc  H  0    0.0437  -11.097  3.784  -0.903  -11.097  3.784  -0.903  
+LIG  H14  hc  H  0    0.0387  -12.183  6.059  -0.813  -12.183  6.059  -0.813  
+LIG  H15  hc  H  0    0.0387  -12.164  5.998   0.951  -12.164  5.998   0.951  
+LIG  H16  hc  H  0    0.0617  -13.633  3.942   0.891  -13.633  3.942   0.891  
+LIG  H17  hc  H  0    0.0617  -13.657  4.013  -0.871  -13.657  4.013  -0.871  
+LIG  H18  hc  H  0    0.0692  -14.754  6.290  -0.765  -14.754  6.290  -0.765  
+LIG  H19  hc  H  0    0.0692  -14.730  6.216   1.002  -14.730  6.216   1.002  
+LIG  O1   oh  O  0   -0.5851  -17.186  5.743   0.152  -17.186  5.743   0.152  
+LIG  O2   o   O  0    -0.484  -16.297  3.695   0.018  -16.297  3.695   0.018  
+LIG  H20  ho  H  0     0.421  -16.779  6.621   0.193  -16.779  6.621   0.193  
+##
+loop_
+_chem_comp_bond.comp_id
+_chem_comp_bond.atom_id_1
+_chem_comp_bond.atom_id_2
+_chem_comp_bond.value_order
+LIG  C1   C2   SING  
+LIG  C1   O1   SING  
+LIG  C1   O2   DOUB  
+LIG  C2   C3   SING  
+LIG  C2   H18  SING  
+LIG  C2   H19  SING  
+LIG  C3   C4   SING  
+LIG  C3   H16  SING  
+LIG  C3   H17  SING  
+LIG  C4   C5   SING  
+LIG  C4   H14  SING  
+LIG  C4   H15  SING  
+LIG  C5   C6   SING  
+LIG  C5   H12  SING  
+LIG  C5   H13  SING  
+LIG  C6   C7   SING  
+LIG  C6   H10  SING  
+LIG  C6   H11  SING  
+LIG  C7   C8   SING  
+LIG  C7   H8   SING  
+LIG  C7   H9   SING  
+LIG  C8   C9   SING  
+LIG  C8   H6   SING  
+LIG  C8   H7   SING  
+LIG  C9   C10  SING  
+LIG  C9   H4   SING  
+LIG  C9   H5   SING  
+LIG  C10  H1   SING  
+LIG  C10  H2   SING  
+LIG  C10  H3   SING  
+LIG  O1   H20  SING  
+##
